@@ -4,7 +4,6 @@ The way to use this code is to subclass Problem to create a class of problems,
 then create problem instances and solve them with calls to the various search
 functions."""
 
-
 from utils import *
 import random
 import sys
@@ -97,8 +96,8 @@ def graph_search(problem, fringe):
     """Search through the successors of a problem to find a goal.
     The argument fringe should be an empty queue.
     If two paths reach a state, only use the best one. [Fig. 3.18]"""
-    closed = {}
-    fringe.append(Node(problem.initial))
+    closed = {}  # lista cerrada
+    fringe.append(Node(problem.initial))  # lista abierta
     while fringe:
         node = fringe.pop()
         if problem.goal_test(node.state):
@@ -118,6 +117,9 @@ def depth_first_graph_search(problem):
     """Search the deepest nodes in the search tree first. [p 74]"""
     return graph_search(problem, Stack())
 
+
+def branch_and_bound(problem):
+    return graph_search(problem, branch_bound())
 
 
 # _____________________________________________________________________________

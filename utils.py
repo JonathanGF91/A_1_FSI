@@ -1,6 +1,8 @@
 
 #______________________________________________________________________________
 # Simple Data Structures: infinity, Dict, Struct
+import bisect
+import math
 
 infinity = 1.0e400
 
@@ -542,6 +544,27 @@ class FIFOQueue(Queue):
             self.A = self.A[self.start:]
             self.start = 0
         return e
+
+class branch_bound(Queue):
+
+    def __init__(self):
+        self.A = []
+        self.start = 0
+
+    def append(self, item):
+        bisect.insort(self.A, (-item.path_cost, item))
+
+    def __len__(self):
+        return len(self.A) - self.start
+
+    def extend(self, items):
+        while items:
+           item = items.pop()
+           bisect.insort(self.A, (-item.path_cost, item))
+        #print(self.A)
+
+    def pop(self):
+        return self.A.pop()[1]
 
 
 
