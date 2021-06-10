@@ -6,6 +6,7 @@ functions."""
 
 from utils import *
 import random
+import math
 import sys
 
 
@@ -88,6 +89,8 @@ class Node:
                      problem.path_cost(self.path_cost, self.state, act, next))
                 for (act, next) in problem.successor(self.state)]
 
+    def __lt__(self, node2):
+        return self.path_cost < node2.path_cost
 
 # ______________________________________________________________________________
 ## Uninformed Search algorithms
@@ -96,15 +99,25 @@ def graph_search(problem, fringe):
     """Search through the successors of a problem to find a goal.
     The argument fringe should be an empty queue.
     If two paths reach a state, only use the best one. [Fig. 3.18]"""
+    visitados = 0
+    expandidos = 1
+
     closed = {}  # lista cerrada
     fringe.append(Node(problem.initial))  # lista abierta
     while fringe:
+        visitados += 1
         node = fringe.pop()
         if problem.goal_test(node.state):
+            print("Visitados\tExpandidos\tCosto acumulado")
+            print(visitados, "\t\t\t", expandidos, "\t\t\t", node.path_cost)
             return node
         if node.state not in closed:
             closed[node.state] = True
-            fringe.extend(node.expand(problem))
+            abierta = node.expand(problem)
+            expandidos += len(abierta)
+            fringe.extend(abierta)
+
+    print(visitados, " - ", expandidos)
     return None
 
 
@@ -121,6 +134,8 @@ def depth_first_graph_search(problem):
 def branch_and_bound(problem):
     return graph_search(problem, branch_bound())
 
+def branch_and_bound_heuristic(problem):
+    return graph_search(problem, branch_bound(problem.h))
 
 # _____________________________________________________________________________
 # The remainder of this file implements examples for the search algorithms.

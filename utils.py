@@ -547,20 +547,22 @@ class FIFOQueue(Queue):
 
 class branch_bound(Queue):
 
-    def __init__(self):
+    def __init__(self, h = (lambda x: 0)):
         self.A = []
         self.start = 0
+        self.h = h
 
     def append(self, item):
-        bisect.insort(self.A, (-item.path_cost, item))
+        bisect.insort(self.A, (- (item.path_cost + self.h(item)), item))
 
     def __len__(self):
         return len(self.A) - self.start
 
     def extend(self, items):
         while items:
+
            item = items.pop()
-           bisect.insort(self.A, (-item.path_cost, item))
+           bisect.insort(self.A, (- (item.path_cost + self.h(item)), item))
         #print(self.A)
 
     def pop(self):
